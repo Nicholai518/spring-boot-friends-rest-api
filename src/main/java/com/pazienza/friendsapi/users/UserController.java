@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -46,5 +47,28 @@ public class UserController {
 		return userEntity
 				.map(entity -> new ResponseEntity<>(entity, HttpStatus.OK))
 				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+
+	/**
+	 * HTTP GET /user/{id}/friends
+	 * <p>
+	 * Given an ID retrieve the user's friends from the database.
+	 *
+	 * @return The list of friends for user
+	 */
+	@GetMapping(path = "/{id}/friends")
+	public @ResponseBody
+	ResponseEntity getFriendsOfUserById(@PathVariable Integer id) {
+		Optional<UserEntity> userEntity = userRepository.findById(id);
+
+		if (userEntity.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Iterable<UserEntity> friends
+				= userRepository.findAllFriendsForUserById(id);
+
+		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 }
