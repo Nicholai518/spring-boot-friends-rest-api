@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/api/user")
 public class UserController {
 
 	@Autowired
