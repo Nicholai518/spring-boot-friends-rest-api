@@ -1,5 +1,7 @@
 package com.pazienza.friendsapi.users;
 
+import com.pazienza.friendsapi.friendRequests.FriendRequestEntity;
+import com.pazienza.friendsapi.friendRequests.FriendRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private FriendRequestRepository friendRequestRepository;
 
 	/**
 	 * HTTP GET /user/all
@@ -70,4 +74,22 @@ public class UserController {
 
 		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
+
+
+	@GetMapping(path = "/{id}/friends-requests")
+	public @ResponseBody
+	ResponseEntity getPendingFriendRequestsForUserById(@PathVariable Integer id) {
+		Optional<UserEntity> userEntity = userRepository.findById(id);
+
+		if (userEntity.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Iterable<FriendRequestEntity> pendingFriendRequests
+				= friendRequestRepository.findAllPendingFriendRequestsForUserById(id);
+
+		return new ResponseEntity<>(pendingFriendRequests, HttpStatus.OK);
+	}
+
+
 }
