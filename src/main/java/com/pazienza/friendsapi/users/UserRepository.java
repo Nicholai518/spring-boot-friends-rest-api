@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 
@@ -18,8 +19,10 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 				"from friends\n" +
 				"where first_user = :user_id or second_user = :user_id) as f, users\n" +
 				"where f.friend_id = users.id",
-		nativeQuery = true
+			nativeQuery = true
 	)
 	List<UserEntity> findAllFriendsForUserById(@Param("user_id") Integer id);
+
+	Optional<UserEntity> findByPlayerAlias(String playerAlias);
 }
 
