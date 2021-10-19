@@ -1,4 +1,4 @@
-package com.pazienza.friendsapi.friendRequests;
+package com.pazienza.friendsapi.friendrequests;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,7 +11,7 @@ public interface FriendRequestRepository extends CrudRepository<FriendRequestEnt
 	@Query(
 			value = "select *\n" +
 					"from friend_requests\n" +
-					"where sender_id  = :user_id or receiver_id = :user_id\n" +
+					"where (sender_id  = :user_id or receiver_id = :user_id\n)" +
 					"and status = 'PENDING'",
 			nativeQuery = true
 	)

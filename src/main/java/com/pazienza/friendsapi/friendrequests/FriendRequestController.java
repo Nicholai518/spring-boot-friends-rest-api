@@ -1,20 +1,26 @@
-package com.pazienza.friendsapi.friendRequests;
+package com.pazienza.friendsapi.friendrequests;
 
 import com.pazienza.friendsapi.ApiErrorResponse;
+import com.pazienza.friendsapi.friends.FriendsEntity;
+import com.pazienza.friendsapi.friends.FriendsRespository;
 import com.pazienza.friendsapi.users.UserEntity;
 import com.pazienza.friendsapi.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -26,6 +32,9 @@ public class FriendRequestController {
 
 	@Autowired
 	private FriendRequestRepository friendRequestRepository;
+
+	@Autowired
+	private FriendsRespository friendsRespository;
 
 	@ResponseBody
 	@PostMapping(path = "/")
@@ -85,5 +94,54 @@ public class FriendRequestController {
 
 		// return a response entity
 		return ResponseEntity.ok(friendRequestEntity);
+	}
+
+	@ResponseBody
+	@PutMapping(path = "/{id}")
+	public ResponseEntity<?> acceptOrDeclineFriendRequest(
+			@PathVariable Integer id,
+			@Valid @RequestBody AcceptOrDeclineFriendRequestData requestData) {
+
+		// Find row with ID
+		Optional<FriendRequestEntity> optionalFriendRequest
+				= friendRequestRepository.findById(id);
+		if (optionalFriendRequest.isEmpty()) {
+			return ResponseEntity
+					.status(HttpStatus.NOT_FOUND)
+					.build();
+		}
+
+		// Check to make sure status is pending
+		FriendRequestEntity friendRequestEntity = optionalFriendRequest.get();
+		if (!Objects.equals(friendRequestEntity.getStatus(), "PENDING")) {
+			return ResponseEntity
+					.status(HttpStatus.BAD_REQUEST)
+					.body(new ApiErrorResponse(
+							HttpStatus.BAD_REQUEST,
+							"This friend request was already accepted or declined"));
+		}
+
+		// TODO: ensure that the current user is the receiver of the friend request
+
+		// update the database to the new status
+		String status = requestData.getStatus();
+		friendRequestEntity.setStatus(status);
+		friendRequestEntity.setUpdatedAt(new Date());
+		friendRequestRepository.save(friendRequestEntity);
+
+		if (friendRequestEntity.getStatus().equalsIgnoreCase("ACCEPTED")) {
+			// add a row in the friends table IF ACCEPTED
+			FriendsEntity friendsEntity = new FriendsEntity(
+					friendRequestEntity.getSenderId(),
+					friendRequestEntity.getReceiverId(),
+					new Date()
+			);
+			friendsRespository.save(friendsEntity);
+		}
+
+		// return ok
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(friendRequestEntity);
 	}
 }

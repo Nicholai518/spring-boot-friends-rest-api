@@ -1,11 +1,20 @@
 package com.pazienza.friendsapi.users;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserEntity {
 
 	@Id
@@ -21,28 +30,4 @@ public class UserEntity {
 	private String emailAddress;
 
 	private String password;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getPlayerAlias() {
-		return playerAlias;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
 }

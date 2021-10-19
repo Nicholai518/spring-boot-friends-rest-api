@@ -1,7 +1,7 @@
 package com.pazienza.friendsapi.users;
 
-import com.pazienza.friendsapi.friendRequests.FriendRequestEntity;
-import com.pazienza.friendsapi.friendRequests.FriendRequestRepository;
+import com.pazienza.friendsapi.friendrequests.FriendRequestEntity;
+import com.pazienza.friendsapi.friendrequests.FriendRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,6 @@ public class UserController {
 		return userRepository.findAll();
 	}
 
-
 	/**
 	 * HTTP GET /user/{id}
 	 * <p>
@@ -51,7 +50,6 @@ public class UserController {
 				.map(entity -> new ResponseEntity<>(entity, HttpStatus.OK))
 				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
-
 
 	/**
 	 * HTTP GET /user/{id}/friends
@@ -90,6 +88,4 @@ public class UserController {
 
 		return new ResponseEntity<>(pendingFriendRequests, HttpStatus.OK);
 	}
-
-
 }
