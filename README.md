@@ -1,6 +1,12 @@
 # spring-boot-friends-rest-api
 
-Friends list API written in Java using Spring boot.
+This project implements a REST API that exposes a "friends list" written in Java & Spring Boot. The functionality is similar to that found in games and social networks.
+
+## Features
+-Able to accept or decline friend request.
+
+## Motivation
+This project was implemented to gain more experience with back-end development for games.
 
 ## Documentation
 
