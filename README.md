@@ -4,6 +4,7 @@ This project implements a REST API that exposes a "friends list" written in Java
 
 ## Features
 - Able to accept or decline friend request.
+- Friend requests can be in a "pending" state
 
 ## Motivation
 This project was implemented to gain more experience with back-end development for games.
