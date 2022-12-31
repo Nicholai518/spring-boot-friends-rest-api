@@ -16,3 +16,9 @@ This project was implemented to gain more experience with back-end development f
 This project supports Swagger.
 
 View the docs: http://localhost:8000/swagger-ui.html
+
+## Tech Stack
+- Java
+- Spring Boot
+- Docker
+- MySQL
